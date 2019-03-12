@@ -1,0 +1,14 @@
+#version 330 core
+
+in vec2 frag_tex_coords;
+in vec4 frag_color;
+
+uniform sampler2D samplerTex;
+
+out vec4 outColor;
+
+void main()
+{
+  vec4 texel = texture(samplerTex, frag_tex_coords);
+  outColor = texel;
+}

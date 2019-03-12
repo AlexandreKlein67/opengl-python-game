@@ -1,0 +1,17 @@
+#version 330 core
+
+layout(location = 0) in vec3 position;
+layout(location = 1) in vec4 color;
+layout(location = 2) in vec2 tex_coords;
+
+uniform mat4 u_MVP;
+
+out vec4 frag_color;
+out vec2 frag_tex_coords;
+
+void main()
+{
+  gl_Position = u_MVP * vec4(position, 1.0f);
+  frag_color = color;
+  frag_tex_coords = tex_coords;
+}

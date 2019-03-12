@@ -1,0 +1,28 @@
+
+from OpenGL.GL import *
+
+class LayoutElement:
+
+    def __init__(self, count, type, normalized, name):
+        self.count = count
+        self.type = type
+        self.normalized = normalized
+        self.name = name
+
+        if self.type == GL_FLOAT or self.type == GL_INT:
+            self.size = 4*count
+        else:
+            self.size = 0
+
+class Layout:
+
+    def __init__(self):
+        self.size = 0
+        self.elements = list()
+
+    def push(self, count, type, normalized=GL_FALSE, name=None):
+
+        if type == GL_FLOAT or type == GL_INT:
+            self.size += 4*count
+
+        self.elements.append(LayoutElement(count, type, normalized, name))

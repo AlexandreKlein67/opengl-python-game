@@ -1,0 +1,15 @@
+from OpenGL.GL import *
+
+class VertexBuffer:
+
+    def __init__(self, array):
+
+        self.glid = glGenBuffers(1)
+        self.bind()
+        glBufferData(GL_ARRAY_BUFFER, array, GL_STATIC_DRAW)
+
+    def bind(self):
+        glBindBuffer(GL_ARRAY_BUFFER, self.glid)
+
+    def unbind(self):
+        glBindBuffer(GL_ARRAY_BUFFER, 0)
