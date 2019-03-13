@@ -241,16 +241,9 @@ class Viewer:
 
 
 # ========== Main function and initialization =================================
-def main():
-    # # print("distance", axial_distance((0, 0), (1, 1)))
-    # result = axial_linedraw((0, 0), (3, 0))
-    # print(result)
-
-    viewer = Viewer()
-    viewer.run()
-
 if __name__ == "__main__":
     if not glfw.init():
         exit()
-    main()
+    viewer = Viewer()
+    viewer.run()
     glfw.terminate()
