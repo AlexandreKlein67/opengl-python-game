@@ -1,0 +1,107 @@
+"""
+    =- G L O B A L   M A P -=
+    It has all the positions, the entities and informations.
+    It then gives the infos to the local maps as they ask them.
+"""
+
+# Import function and constants from libraries
+from random import randint
+from math import radians, cos, sin
+from OpenGL.GL import GL_LINE_LOOP
+
+import numpy as np
+
+# Import application's modules
+from object.mesh import Mesh
+from view.transform import hex_to_cartesian
+
+class HexagonalTile(Mesh):
+
+    #---------- CONSTRUCTOR ----------------
+    def __init__(self, q=0, r=0):
+        """
+            Create the mesh for an hexagonal tile
+        """
+        self.center = (q, r)
+        self.color = (0.5, 0.5, 0.5, 1.0)
+
+        # Mesh
+        vertices = []
+
+        # Create the vertices and put them in an array
+        for i in range(6):
+            angle_deg = 60 * i - 30
+            angle_rad = radians(angle_deg)
+            vertices.extend((cos(angle_rad), 0, sin(angle_rad)))
+
+        vertices = np.array(vertices, np.float32)   # Numpy format float32
+
+        outline_indices = np.array((
+            0, 5, 4, 3, 2, 1
+        ), np.uint32)
+
+        # Create the Mesh
+        super().__init__(vertices, outline_indices)
+
+        # Set the tile at the correct position
+        cartesian_position = hex_to_cartesian(self.center)
+        self.set_position(cartesian_position[0], 0, cartesian_position[1])
+
+    #---------- METHODS --------------------
+    def draw(self, projection_view_matrix, color_shader):
+        # Set the color
+        color_shader.bind()
+        color_shader.set_color(self.color)
+        # Draw it
+        super().draw(projection_view_matrix, color_shader, draw_mod=GL_LINE_LOOP)
+
+
+class Map:
+
+    #----------- CONSTRUCTOR ---------------
+    def __init__(self, size=-1):
+
+        MIN_SIZE = 3
+        MAX_SIZE = 8
+
+        if size < 0:
+            self.size = randint(MIN_SIZE, MAX_SIZE) # Set to a random value
+        else:
+            self.size = size
+
+        self.game_objects = []      # List of all the game objects
+        self.hexagonal_tiles = []   # List of the tiles
+        # Fill the list
+        for q in range(-self.size, self.size+1):
+            r1 = max(-self.size, -q - self.size)
+            r2 = min(self.size, -q + self.size)
+            for r in range(r1, r2+1):
+                self.hexagonal_tiles.append(HexagonalTile(q, r))
+
+
+    #---------- METHODS --------------------
+    def draw(self, projection_view_matrix, color_shader):
+        # Draw each tiles
+        for tile in self.hexagonal_tiles:
+            tile.draw(projection_view_matrix, color_shader)
+
+
+    #---------- GETTERS & SETTERS ----------
+    def get_tile_objects(self, q, r):
+        # Go through the list and return all objects that have the same coords
+        # NOTE: The objects might not be at the hex_position because of moving
+        buffer = []
+        for object in self.game_objects:
+            if object.hex_position == (q, r):
+                buffer.append(object)
+
+        return buffer
+
+    def get_player_objects(self, player_id):
+        # Go through the list and return all object that belong to the player
+        buffer = []
+        for object in self.game_objects:
+            if object.player_id == player_id:
+                buffer.append(object)
+
+        return buffer

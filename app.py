@@ -25,6 +25,8 @@ from object.test.pyramid import Pyramid
 from object.mesh import Mesh, load_mesh
 from object.entity.building import Colony
 
+from game import Game
+
 # ---------- Viewer class -----------------------------------------------------
 class Viewer:
 
@@ -35,7 +37,10 @@ class Viewer:
 
         self.width, self.height = width, height
 
-        self.win = glfw.create_window(width, height, name, None, None)
+        primary = glfw.get_primary_monitor()
+        mode = glfw.get_video_mode(primary)
+
+        self.win = glfw.create_window(mode.size.width, mode.size.height, name, None, None)
         if not self.win:
             glfw.terminate()
             exit()
@@ -102,16 +107,18 @@ class Viewer:
         self.move_y = 0
 
 
-        self.map = BasicMap(5)
+        # self.map = BasicMap(5)
+        self.game = Game()
+
         main_planet = MainPlanet(1.0)
         main_planet_pos = (0, 0)
 
-        self.map.set_entity(main_planet_pos, main_planet)
+        # self.map.set_entity(main_planet_pos, main_planet)
         # Trying to enter the main planet at the launch
         # self.map.selected_tile = self.map.get_tile(main_planet_pos)
         # self.map_pointer = main_planet
 
-        self.elements.append(self.map)
+        # self.elements.append(self.map)
 
         self.elements.extend((
             Background(1, 20),
@@ -143,10 +150,10 @@ class Viewer:
             mouse_hex_round = self.mouse_picker.mouse_hex_round
 
             # Update the main map or the inner map if one is selected
-            if self.map_pointer:
-                self.map_pointer.map.update_mouse(mouse_hex_round, self.clicks)
-            else:
-                self.map.update_mouse(mouse_hex_round, self.clicks)
+            # if self.map_pointer:
+            #     self.map_pointer.map.update_mouse(mouse_hex_round, self.clicks)
+            # else:
+            #     self.map.update_mouse(mouse_hex_round, self.clicks)
 
             # ----- Camera ----------------------------------
             self.camera.process_mouse_mouvement(self.move_x, self.move_y)
@@ -165,19 +172,20 @@ class Viewer:
 
 
     def update(self):
-        self.map_pointer = self.map.update_map_pointer(self.delta_time, self.keys)
+        # self.map_pointer = self.map.update_map_pointer(self.delta_time, self.keys)
 
-        if self.map_pointer:
-            for tiles in self.map_pointer.map.tiles:
-                tiles.update(self.delta_time, self.keys)
+        # if self.map_pointer:
+        #     for tiles in self.map_pointer.map.tiles:
+        #         tiles.update(self.delta_time, self.keys)
+        pass
 
     def draw(self, projection_view_matrix):
-        if self.map_pointer == None:
-            for element in self.elements:
-                element.draw(projection_view_matrix, self.shaders)
-        else:
-            self.map_pointer.map.draw(projection_view_matrix, self.shaders)
-
+        # if self.map_pointer == None:
+        #     for element in self.elements:
+        #         element.draw(projection_view_matrix, self.shaders)
+        # else:
+        #     self.map_pointer.map.draw(projection_view_matrix, self.shaders)
+        self.game.draw(projection_view_matrix, self.shaders)
 
 
     def on_key(self, _win, key, _scancode, action, _mods):
