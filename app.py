@@ -40,7 +40,7 @@ class Viewer:
         primary = glfw.get_primary_monitor()
         mode = glfw.get_video_mode(primary)
 
-        self.win = glfw.create_window(mode.size.width, mode.size.height, name, None, None)
+        self.win = glfw.create_window(width, height, name, None, None)
         if not self.win:
             glfw.terminate()
             exit()
