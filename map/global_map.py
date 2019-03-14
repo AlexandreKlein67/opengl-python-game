@@ -22,7 +22,7 @@ class HexagonalTile(Mesh):
         """
             Create the mesh for an hexagonal tile
         """
-        self.center = (q, r)
+        self.hex_position = (q, r)
         self.color = (0.5, 0.5, 0.5, 1.0)
 
         # Mesh
@@ -44,7 +44,7 @@ class HexagonalTile(Mesh):
         super().__init__(vertices, outline_indices)
 
         # Set the tile at the correct position
-        cartesian_position = hex_to_cartesian(self.center)
+        cartesian_position = hex_to_cartesian(self.hex_position)
         self.set_position(cartesian_position[0], 0, cartesian_position[1])
 
     #---------- METHODS --------------------
@@ -105,3 +105,14 @@ class Map:
                 buffer.append(object)
 
         return buffer
+
+    def get_random_tile_pos(self):
+        # Return a random tile position
+        random_number = randint(0, len(self.hexagonal_tiles) - 1)
+        tile = self.hexagonal_tiles[random_number]
+        return tile.hex_position
+
+    def is_tile_empty(self, q, r):
+        # Check if the tile is empty or not
+        objects = self.get_tile_objects(q, r)
+        return True if len(objects) == 0 else False

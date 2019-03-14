@@ -21,6 +21,8 @@ class Player:
         self.id = player_id
         self.local_map = map.local_map.Map(global_map)
 
+        print(global_map.get_random_tile_pos())
+
     #---------- METHODS ---------------
     def draw(self, projection_view_matrix, shaders):
         """

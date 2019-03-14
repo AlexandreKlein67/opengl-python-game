@@ -2,6 +2,7 @@
     Game Objects & Entities
 """
 
+from object.mesh import load_mesh
 
 class GameObject:
 
@@ -27,8 +28,8 @@ class GameObject:
 
         # Setting the position
         self.hex_position = hex_position
-        self.q = position[0]
-        self.r = position[1]
+        self.q = hex_position[0]
+        self.r = hex_position[1]
 
 
 class Entity(GameObject):

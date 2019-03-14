@@ -6,6 +6,8 @@
 # Importing the application's modules
 import player
 from map.global_map import Map
+from game_object import *
+from random import randint
 
 
 class Game:
@@ -24,6 +26,9 @@ class Game:
         # Set the player that plays on this application to 0 by default
         self.app_player_id = 0
 
+        # --- Create the map ---
+        self.create_planets()
+
     #---------- METHODS --------------------
     def draw(self, projection_view_matrix, shaders):
         """
@@ -41,6 +46,21 @@ class Game:
         # NOTE: It only needs the color shader
         self.global_map.draw(projection_view_matrix, shaders["color"])
 
+    def create_planets(self):
+        n_planets = randint(len(self.players) + 3, len(self.players) + 7)
+        for i in range(n_planets):
+
+            temp_pos = self.global_map.get_random_tile_pos()
+            while not self.global_map.is_tile_empty(temp_pos[0], temp_pos[1]):
+                temp_pos = self.global_map.get_random_tile_pos()
+
+            mesh_constructor = {
+                "model": "res/models/planet.obj",
+                "texture": "res/textures/planet.jpg"
+            }
+            temp_planet = GameObject(mesh_constructor, temp_pos)
+            self.global_map.game_objects.append(temp_planet)
+            print("Creating a new planet at position :", temp_pos)
 
     #---------- GETTERS & SETTERS ----------
     def get_player(self, n):
