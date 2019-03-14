@@ -20,6 +20,7 @@ class Player:
         # Setting the parameters
         self.id = player_id
         self.local_map = map.local_map.Map(global_map)
+        self.global_map = global_map
 
         print(global_map.get_random_tile_pos())
 
@@ -35,7 +36,8 @@ class Player:
         self.local_map.draw(projection_view_matrix, shaders)
 
 
-    def update(self):
+    def update(self, mouse_clicks):
 
+        # entities = self.global_map.get_player_objects(self.id)
         # Update the local map
-        self.local_map.update()
+        self.local_map.update(self.id)

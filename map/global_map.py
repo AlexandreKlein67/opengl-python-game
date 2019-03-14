@@ -13,17 +13,17 @@ import numpy as np
 
 # Import application's modules
 from object.mesh import Mesh
-from view.transform import hex_to_cartesian
+from view.transform import hex_to_cartesian, hex_round
 
 class HexagonalTile(Mesh):
 
     #---------- CONSTRUCTOR ----------------
-    def __init__(self, q=0, r=0):
+    def __init__(self, q=0, r=0, color=(0.5, 0.5, 0.5, 1.0)):
         """
             Create the mesh for an hexagonal tile
         """
         self.hex_position = (q, r)
-        self.color = (0.5, 0.5, 0.5, 1.0)
+        self.color = color
 
         # Mesh
         vertices = []
@@ -55,6 +55,20 @@ class HexagonalTile(Mesh):
         # Draw it
         super().draw(projection_view_matrix, color_shader, draw_mod=GL_LINE_LOOP)
 
+    #---------- GETTERS & SETTERS ----------
+    def set_y(self, y):
+        cartesian_position = hex_to_cartesian(self.hex_position)
+        self.set_position(cartesian_position[0], y, cartesian_position[1])
+
+
+class Cursor(HexagonalTile):
+
+    #---------- CONSTRUCTOR ----------------
+    def __init__(self, q, r, color):
+        super().__init__(q, r, color)
+
+        self.z_index = 0.1
+
 
 class Map:
 
@@ -76,7 +90,9 @@ class Map:
             r1 = max(-self.size, -q - self.size)
             r2 = min(self.size, -q + self.size)
             for r in range(r1, r2+1):
-                self.hexagonal_tiles.append(HexagonalTile(q, r))
+                self.hexagonal_tiles.append(HexagonalTile(q, r, (0.2, 0.2, 0.2, 1.0)))
+
+        self.cursor = Cursor(0, 0, (1.0, 0.0, 0.3, 1.0))
 
 
     #---------- METHODS --------------------
@@ -84,6 +100,13 @@ class Map:
         # Draw each tiles
         for tile in self.hexagonal_tiles:
             tile.draw(projection_view_matrix, color_shader)
+
+        self.cursor.draw(projection_view_matrix, color_shader)
+
+    def update(self, mouse_hex_pos):
+        # hex_mouse_pos = hex_round(mouse_pos)
+        cartesian_position = hex_to_cartesian(mouse_hex_pos)
+        self.cursor.set_position(cartesian_position[0], self.cursor.z_index, cartesian_position[1])
 
 
     #---------- GETTERS & SETTERS ----------

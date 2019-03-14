@@ -177,7 +177,7 @@ class Viewer:
         # if self.map_pointer:
         #     for tiles in self.map_pointer.map.tiles:
         #         tiles.update(self.delta_time, self.keys)
-        pass
+        self.game.update(self.mouse_picker.mouse_hex_round, self.clicks, self.keys)
 
     def draw(self, projection_view_matrix):
         # if self.map_pointer == None:

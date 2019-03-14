@@ -27,7 +27,9 @@ class Game:
         self.app_player_id = 0
 
         # --- Create the map ---
-        self.create_planets()
+        # self.create_planets()
+
+        self.demo_create_unit()
 
     #---------- METHODS --------------------
     def draw(self, projection_view_matrix, shaders):
@@ -38,13 +40,12 @@ class Game:
         shaders : dict
             -> Both shaders ("texture" & "color")
         """
-
-        # Get the app player and draw his local map
-        self.get_player(self.app_player_id).draw(projection_view_matrix, shaders)
-
         # Draw the global map
         # NOTE: It only needs the color shader
         self.global_map.draw(projection_view_matrix, shaders["color"])
+
+        # Get the app player and draw his local map
+        self.get_player(self.app_player_id).draw(projection_view_matrix, shaders)
 
     def create_planets(self):
         n_planets = randint(len(self.players) + 3, len(self.players) + 7)
@@ -61,6 +62,33 @@ class Game:
             temp_planet = GameObject(mesh_constructor, temp_pos)
             self.global_map.game_objects.append(temp_planet)
             print("Creating a new planet at position :", temp_pos)
+
+    def demo_create_unit(self, player_id=0):
+        mesh_constructor = {
+            "model": "res/models/default.obj",
+            "texture": "res/textures/default_tex.png",
+            "is_png": True
+        }
+
+        game_object_constructor = {
+            "mesh_constructor": mesh_constructor,
+            "hex_position": (0, 0)
+        }
+
+        entity_constructor = {
+            "player_id": player_id
+        }
+
+        print("creating a new demo unit for player", player_id)
+        temp_unit = Unit(game_object_constructor, entity_constructor)
+        self.global_map.game_objects.append(temp_unit)
+
+    def update(self, mouse_hex_pos, mouse_clicks, keys_on):
+        # Update the player
+        self.get_player(self.app_player_id).update(mouse_clicks)
+
+        # Update the global map
+        self.global_map.update(mouse_hex_pos)
 
     #---------- GETTERS & SETTERS ----------
     def get_player(self, n):

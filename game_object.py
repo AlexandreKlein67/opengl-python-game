@@ -31,6 +31,10 @@ class GameObject:
         self.q = hex_position[0]
         self.r = hex_position[1]
 
+    #---------- METHODS --------------------
+    def draw(self, projection_view_matrix, texture_shader):
+        self.mesh.draw(projection_view_matrix, texture_shader)
+
 
 class Entity(GameObject):
 
@@ -60,7 +64,7 @@ class Entity(GameObject):
 # WARNING: These two classes are very similar for now, but the main differences
 # are in the moving and interacting parts.
 
-class Units(Entity):
+class Unit(Entity):
 
     #---------- CONSTRUCTOR ----------------
     def __init__(self, game_object_constructor, entity_constructor):
@@ -74,8 +78,8 @@ class Units(Entity):
         super().__init__(
             game_object_constructor,
             entity_constructor["player_id"],
-            entity_constructor["life_points"],
-            entity_constructor["costs"])
+            entity_constructor.get("life_points", 1),
+            entity_constructor.get("costs", {}))
 
 
 class Building(Entity):
