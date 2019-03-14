@@ -5,7 +5,7 @@
 """
 
 # Import application's modules
-import map.local
+import map.local_map
 
 
 class Player:
@@ -19,7 +19,7 @@ class Player:
 
         # Setting the parameters
         self.id = player_id
-        self.local_map = map.local.Map(global_map)
+        self.local_map = map.local_map.Map(global_map)
 
     #---------- METHODS ---------------
     def draw(self, projection_view_matrix, shaders):

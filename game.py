@@ -5,7 +5,7 @@
 
 # Importing the application's modules
 import player
-from map.global_ import Map
+from map.global_map import Map
 
 
 class Game:
