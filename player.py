@@ -36,8 +36,6 @@ class Player:
         self.local_map.draw(projection_view_matrix, shaders)
 
 
-    def update(self, mouse_clicks):
-
-        # entities = self.global_map.get_player_objects(self.id)
+    def update(self, mouse_hex_pos, mouse_clicks):
         # Update the local map
-        self.local_map.update(self.id)
+        self.local_map.update(self.id, mouse_hex_pos, mouse_clicks)

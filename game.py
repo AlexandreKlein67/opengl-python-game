@@ -85,10 +85,10 @@ class Game:
 
     def update(self, mouse_hex_pos, mouse_clicks, keys_on):
         # Update the player
-        self.get_player(self.app_player_id).update(mouse_clicks)
+        self.get_player(self.app_player_id).update(mouse_hex_pos, mouse_clicks)
 
         # Update the global map
-        self.global_map.update(mouse_hex_pos)
+        self.global_map.update(mouse_hex_pos, mouse_clicks)
 
     #---------- GETTERS & SETTERS ----------
     def get_player(self, n):

@@ -67,7 +67,7 @@ class Cursor(HexagonalTile):
     def __init__(self, q, r, color):
         super().__init__(q, r, color)
 
-        self.z_index = 0.1
+        self.z_index = 0.125
 
 
 class Map:
@@ -93,6 +93,8 @@ class Map:
                 self.hexagonal_tiles.append(HexagonalTile(q, r, (0.2, 0.2, 0.2, 1.0)))
 
         self.cursor = Cursor(0, 0, (1.0, 0.0, 0.3, 1.0))
+        self.selected_tile = Cursor(100, 100, (0.0, 1.0, 0.2, 1.0))
+        self.selected_tile.z_index = 0.3
 
 
     #---------- METHODS --------------------
@@ -102,11 +104,18 @@ class Map:
             tile.draw(projection_view_matrix, color_shader)
 
         self.cursor.draw(projection_view_matrix, color_shader)
+        self.selected_tile.draw(projection_view_matrix, color_shader)
 
-    def update(self, mouse_hex_pos):
-        # hex_mouse_pos = hex_round(mouse_pos)
+    def update(self, mouse_hex_pos, mouse_clicks):
+        # Updating the cursor position
         cartesian_position = hex_to_cartesian(mouse_hex_pos)
         self.cursor.set_position(cartesian_position[0], self.cursor.z_index, cartesian_position[1])
+
+        # Updating the "selected_tile"
+        if mouse_clicks.get("left", False):
+            if self.is_a_tile(mouse_hex_pos[0], mouse_hex_pos[1]):
+                self.selected_tile.hex_position = mouse_hex_pos
+                self.selected_tile.set_position(cartesian_position[0], self.selected_tile.z_index, cartesian_position[1])
 
 
     #---------- GETTERS & SETTERS ----------
@@ -139,3 +148,10 @@ class Map:
         # Check if the tile is empty or not
         objects = self.get_tile_objects(q, r)
         return True if len(objects) == 0 else False
+
+    def is_a_tile(self, q, r):
+        for tile in self.hexagonal_tiles:
+            if tile.hex_position == (q, r):
+                return True
+
+        return False
